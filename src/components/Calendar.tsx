@@ -14,29 +14,14 @@ export const Calendar = () => {
     month: new Date().getMonth() + 1,
     date: new Date().getDate(),
   })
-  const [weekRows, setWeekRows] = useState<number[][]>([])
+  const [weekRows, setWeekRows] = useState<DateObject[][]>([])
 
-  const getWeekRows = (year: number, month: number): number[][] => {
-    const firstDay = new Date(year, month - 1, 1).getDay()
-    const lastDay = new Date(year, month, 0).getDay()
-    const lastDate = new Date(year, month, 0).getDate()
-    const prevMonthLastDate = new Date(year, month - 1, 0).getDate()
-    const rows = []
-    let row = []
-    for (let i = 0; i < firstDay; i++) {
-      row.push(prevMonthLastDate - firstDay + i + 1)
-    }
-    for (let i = 1; i <= lastDate; i++) {
-      if (row.length === 7) {
-        rows.push(row)
-        row = []
-      }
-      row.push(i)
-    }
-    if (row.length) {
-      rows.push(row)
-    }
-    return rows
+  const isEqualsDate = (dateObject1: DateObject, dateObject2: DateObject) => {
+    return (
+      dateObject1.year === dateObject2.year &&
+      dateObject1.month === dateObject2.month &&
+      dateObject1.date === dateObject2.date
+    )
   }
 
   const handleClickPrev = () => {
@@ -55,12 +40,43 @@ export const Calendar = () => {
     setSelectedDate({ year: selectedDate.year, month: selectedDate.month + 1, date: 1 })
   }
 
-  const handleClickDate = (date: number) => () => {
-    setSelectedDate({ ...selectedDate, date })
+  const handleClickDate = (dateObject: DateObject) => () => {
+    setSelectedDate(dateObject)
   }
 
   useEffect(() => {
-    setWeekRows(getWeekRows(selectedDate.year, selectedDate.month))
+    const { year, month } = selectedDate
+
+    const firstDay = new Date(year, month - 1, 1).getDay()
+    const lastDay = new Date(year, month, 0).getDay()
+    const lastDate = new Date(year, month, 0).getDate()
+
+    const prevMonth = month === 1 ? 12 : month - 1
+    const nextMonth = month === 12 ? 1 : month + 1
+    const prevYear = month === 1 ? year - 1 : year
+    const nextYear = month === 12 ? year + 1 : year
+
+    const prevMonthLastDate = new Date(year, month - 1, 0).getDate()
+
+    const rows = []
+    let row = []
+    for (let i = 0; i < firstDay; i++) {
+      row.push({ year: prevYear, month: prevMonth, date: prevMonthLastDate - firstDay + i + 1 })
+    }
+    for (let i = 1; i <= lastDate; i++) {
+      if (row.length === 7) {
+        rows.push(row)
+        row = []
+      }
+      row.push({ year, month, date: i })
+    }
+    for (let i = 0; i < 7 - lastDay - 1; i++) {
+      row.push({ year: nextYear, month: nextMonth, date: i + 1 })
+    }
+    if (row.length) {
+      rows.push(row)
+    }
+    setWeekRows(rows)
   }, [selectedDate])
 
   return (
@@ -82,14 +98,14 @@ export const Calendar = () => {
         </div>
         {weekRows.map((weekRow, rowIndex) => (
           <div key={rowIndex} className="flex flex-1 border-l-[1px] border-black">
-            {weekRow.map((date, columnIndex) => (
+            {weekRow.map((dateObject, columnIndex) => (
               <button
                 key={`${rowIndex}_${columnIndex}`}
                 className="flex flex-1 border-r-[1px] border-b-[1px] border-black hover:bg-gray-200"
-                onClick={handleClickDate(date)}
+                onClick={handleClickDate(dateObject)}
               >
-                <div className="items-center aria-selected:text-blue-500" aria-selected={selectedDate.date === date}>
-                  {date}
+                <div className="aria-selected:text-blue-500" aria-selected={isEqualsDate(selectedDate, dateObject)}>
+                  {dateObject.date}
                 </div>
               </button>
             ))}
