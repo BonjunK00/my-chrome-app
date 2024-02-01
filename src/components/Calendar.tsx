@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Modal } from './Modal'
 
 const week = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -80,38 +81,43 @@ export const Calendar = () => {
   }, [selectedDate])
 
   return (
-    <div className="p-[20px] h-full">
-      <div className="flex flex-col bg-white p-[10px] h-full">
-        <div className="flex items-center px-[10px] justify-between">
-          <div>{`${selectedDate.year}년 ${selectedDate.month}월`}</div>
-          <div className="flex text-[20px]">
-            <button onClick={handleClickPrev}>{`<`}</button>
-            <button onClick={handleClickNext}>{`>`}</button>
+    <>
+      <div className="p-[20px] h-full">
+        <div className="flex flex-col bg-white p-[10px] h-full">
+          <div className="flex items-center px-[10px] justify-between">
+            <div>{`${selectedDate.year}년 ${selectedDate.month}월`}</div>
+            <div className="flex text-[20px]">
+              <button onClick={handleClickPrev}>{`<`}</button>
+              <button onClick={handleClickNext}>{`>`}</button>
+            </div>
           </div>
-        </div>
-        <div className="flex border-b-[1px] border-black">
-          {week.map((day) => (
-            <div key={day} className="flex-1 text-center">
-              {day}
+          <div className="flex border-b-[1px] border-black">
+            {week.map((day) => (
+              <div key={day} className="flex-1 text-center">
+                {day}
+              </div>
+            ))}
+          </div>
+          {weekRows.map((weekRow, rowIndex) => (
+            <div key={rowIndex} className="flex flex-1 border-l-[1px] border-black">
+              {weekRow.map((dateObject, columnIndex) => (
+                <button
+                  key={`${rowIndex}_${columnIndex}`}
+                  className="flex flex-1 border-r-[1px] border-b-[1px] border-black hover:bg-gray-200"
+                  onClick={handleClickDate(dateObject)}
+                >
+                  <div className="aria-selected:text-blue-500" aria-selected={isEqualsDate(selectedDate, dateObject)}>
+                    {dateObject.date}
+                  </div>
+                </button>
+              ))}
             </div>
           ))}
         </div>
-        {weekRows.map((weekRow, rowIndex) => (
-          <div key={rowIndex} className="flex flex-1 border-l-[1px] border-black">
-            {weekRow.map((dateObject, columnIndex) => (
-              <button
-                key={`${rowIndex}_${columnIndex}`}
-                className="flex flex-1 border-r-[1px] border-b-[1px] border-black hover:bg-gray-200"
-                onClick={handleClickDate(dateObject)}
-              >
-                <div className="aria-selected:text-blue-500" aria-selected={isEqualsDate(selectedDate, dateObject)}>
-                  {dateObject.date}
-                </div>
-              </button>
-            ))}
-          </div>
-        ))}
       </div>
-    </div>
+      <Modal isOpen>
+        <div>안녕하세요</div>
+      </Modal>
+    </>
   )
 }
