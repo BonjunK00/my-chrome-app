@@ -1,13 +1,5 @@
 import { useEffect, useState } from 'react'
 
-const defaultWeekRows = [
-  [1, 2, 3, 4, 5, 6, 7],
-  [8, 9, 10, 11, 12, 13, 14],
-  [15, 16, 17, 18, 19, 20, 21],
-  [22, 23, 24, 25, 26, 27, 28],
-  [29, 30, 31],
-]
-
 const week = ['일', '월', '화', '수', '목', '금', '토']
 
 type DateObject = {
@@ -17,14 +9,35 @@ type DateObject = {
 }
 
 export const Calendar = () => {
-  const today = new Date()
-
   const [selectedDate, setSelectedDate] = useState<DateObject>({
-    year: today.getFullYear(),
-    month: today.getMonth() + 1,
-    date: today.getDate(),
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    date: new Date().getDate(),
   })
-  const [weekRows, setWeekRows] = useState<number[][]>(defaultWeekRows)
+  const [weekRows, setWeekRows] = useState<number[][]>([])
+
+  const getWeekRows = (year: number, month: number): number[][] => {
+    const firstDay = new Date(year, month - 1, 1).getDay()
+    const lastDay = new Date(year, month, 0).getDay()
+    const lastDate = new Date(year, month, 0).getDate()
+    const prevMonthLastDate = new Date(year, month - 1, 0).getDate()
+    const rows = []
+    let row = []
+    for (let i = 0; i < firstDay; i++) {
+      row.push(prevMonthLastDate - firstDay + i + 1)
+    }
+    for (let i = 1; i <= lastDate; i++) {
+      if (row.length === 7) {
+        rows.push(row)
+        row = []
+      }
+      row.push(i)
+    }
+    if (row.length) {
+      rows.push(row)
+    }
+    return rows
+  }
 
   const handleClickPrev = () => {
     if (selectedDate.month === 1) {
@@ -46,33 +59,38 @@ export const Calendar = () => {
     setSelectedDate({ ...selectedDate, date })
   }
 
+  useEffect(() => {
+    setWeekRows(getWeekRows(selectedDate.year, selectedDate.month))
+  }, [selectedDate])
+
   return (
-    <div className="p-[20px]">
-      <div className="flex flex-col bg-white w-fit p-[10px] ">
-        <div className="flex items-center justify-between px-[10px]">
+    <div className="p-[20px] h-full">
+      <div className="flex flex-col bg-white p-[10px] h-full">
+        <div className="flex items-center px-[10px] justify-between">
           <div>{`${selectedDate.year}년 ${selectedDate.month}월`}</div>
           <div className="flex text-[20px]">
             <button onClick={handleClickPrev}>{`<`}</button>
             <button onClick={handleClickNext}>{`>`}</button>
           </div>
         </div>
-        <div className="flex">
+        <div className="flex border-b-[1px] border-black">
           {week.map((day) => (
-            <div key={day} className="w-[40px]">
+            <div key={day} className="flex-1 text-center">
               {day}
             </div>
           ))}
         </div>
-        {weekRows.map((weekRow, index) => (
-          <div key={index} className="flex">
-            {weekRow.map((date) => (
+        {weekRows.map((weekRow, rowIndex) => (
+          <div key={rowIndex} className="flex flex-1 border-l-[1px] border-black">
+            {weekRow.map((date, columnIndex) => (
               <button
-                key={date}
-                aria-selected={selectedDate.date === date}
-                className="w-[40px] text-start aria-selected:text-blue-500"
+                key={`${rowIndex}_${columnIndex}`}
+                className="flex flex-1 border-r-[1px] border-b-[1px] border-black hover:bg-gray-200"
                 onClick={handleClickDate(date)}
               >
-                {date}
+                <div className="items-center aria-selected:text-blue-500" aria-selected={selectedDate.date === date}>
+                  {date}
+                </div>
               </button>
             ))}
           </div>
