@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Modal } from './Modal'
 import { useModal } from '../hooks/useModal'
 
-const week = ['일', '월', '화', '수', '목', '금', '토']
+const week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 type DateObject = {
   year: number
@@ -26,6 +26,10 @@ export const Calendar = () => {
       dateObject1.month === dateObject2.month &&
       dateObject1.date === dateObject2.date
     )
+  }
+
+  const getEnglishMonth = (month: number) => {
+    return new Date(selectedDate.year, month - 1, 1).toLocaleString('en-US', { month: 'long' })
   }
 
   const handleClickPrev = () => {
@@ -86,38 +90,37 @@ export const Calendar = () => {
 
   return (
     <>
-      <div className="p-[20px] h-full">
-        <div className="flex flex-col bg-white p-[10px] h-full">
-          <div className="flex items-center px-[10px] justify-between">
-            <div>{`${selectedDate.year}년 ${selectedDate.month}월`}</div>
-            <div className="flex text-[20px]">
-              <button onClick={handleClickPrev}>{`<`}</button>
-              <button onClick={handleClickNext}>{`>`}</button>
-            </div>
+      <div className="flex flex-col h-full">
+        <div className="flex items-center px-[10px] justify-between bg-[#8195B9] text-white p-[5px]">
+          <button className="text-[40px]" onClick={handleClickPrev}>{`<`}</button>
+          <div className="flex flex-col items-center">
+            <div className="text-[30px]">{getEnglishMonth(selectedDate.month)}</div>
+            <div className="text-[18px]">{selectedDate.year}</div>
           </div>
-          <div className="flex border-b-[1px] border-black">
-            {week.map((day) => (
-              <div key={day} className="flex-1 text-center">
-                {day}
-              </div>
-            ))}
-          </div>
-          {weekRows.map((weekRow, rowIndex) => (
-            <div key={rowIndex} className="flex flex-1 border-l-[1px] border-black">
-              {weekRow.map((dateObject, columnIndex) => (
-                <button
-                  key={`${rowIndex}_${columnIndex}`}
-                  className="flex flex-1 border-r-[1px] border-b-[1px] border-black hover:bg-gray-200"
-                  onClick={handleClickDate(dateObject)}
-                >
-                  <div className="aria-selected:text-blue-500" aria-selected={isEqualsDate(selectedDate, dateObject)}>
-                    {dateObject.date}
-                  </div>
-                </button>
-              ))}
+          <button className="text-[40px]" onClick={handleClickNext}>{`>`}</button>
+        </div>
+        <div className="flex bg-[#9AB5E7] text-white p-[10px] text-[18px]">
+          {week.map((day) => (
+            <div key={day} className="flex-1 text-center">
+              {day}
             </div>
           ))}
         </div>
+        {weekRows.map((weekRow, rowIndex) => (
+          <div key={rowIndex} className={`flex flex-1 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-[#EDF3FF]'}`}>
+            {weekRow.map((dateObject, columnIndex) => (
+              <button
+                key={`${rowIndex}_${columnIndex}`}
+                className="flex flex-1 hover:bg-[#E3E9F6] justify-center text-[17px] p-[1px]"
+                onClick={handleClickDate(dateObject)}
+              >
+                <div className="aria-selected:text-blue-500" aria-selected={isEqualsDate(selectedDate, dateObject)}>
+                  {dateObject.date}
+                </div>
+              </button>
+            ))}
+          </div>
+        ))}
       </div>
       <Modal isOpen={isOpen} onClose={closeModal}>
         <div>안녕하세요</div>
