@@ -99,7 +99,7 @@ export const Calendar = () => {
           </div>
           <button className="text-[40px]" onClick={handleClickNext}>{`>`}</button>
         </div>
-        <div className="flex bg-[#9AB5E7] text-white p-[10px] text-[18px]">
+        <div className="flex bg-[#9AB5E7] text-white py-[10px] text-[18px]">
           {week.map((day) => (
             <div key={day} className="flex-1 text-center">
               {day}
@@ -111,7 +111,7 @@ export const Calendar = () => {
             {weekRow.map((dateObject, columnIndex) => (
               <button
                 key={`${rowIndex}_${columnIndex}`}
-                className="flex flex-1 hover:bg-[#E3E9F6] justify-center text-[17px] p-[1px]"
+                className="flex flex-1 hover:bg-[#E3E9F6] justify-center text-[16px] p-[1px] text-[#262C37] font-medium"
                 onClick={handleClickDate(dateObject)}
               >
                 <div>{dateObject.date}</div>
