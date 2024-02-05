@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Modal } from './Modal'
+import { useModal } from '../hooks/useModal'
 
 const week = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -16,6 +17,8 @@ export const Calendar = () => {
     date: new Date().getDate(),
   })
   const [weekRows, setWeekRows] = useState<DateObject[][]>([])
+
+  const { isOpen, openModal, closeModal } = useModal()
 
   const isEqualsDate = (dateObject1: DateObject, dateObject2: DateObject) => {
     return (
@@ -43,6 +46,7 @@ export const Calendar = () => {
 
   const handleClickDate = (dateObject: DateObject) => () => {
     setSelectedDate(dateObject)
+    openModal()
   }
 
   useEffect(() => {
@@ -115,7 +119,7 @@ export const Calendar = () => {
           ))}
         </div>
       </div>
-      <Modal isOpen>
+      <Modal isOpen={isOpen} onClose={closeModal}>
         <div>안녕하세요</div>
       </Modal>
     </>
