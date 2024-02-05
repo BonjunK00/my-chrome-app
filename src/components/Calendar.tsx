@@ -114,9 +114,7 @@ export const Calendar = () => {
                 className="flex flex-1 hover:bg-[#E3E9F6] justify-center text-[17px] p-[1px]"
                 onClick={handleClickDate(dateObject)}
               >
-                <div className="aria-selected:text-blue-500" aria-selected={isEqualsDate(selectedDate, dateObject)}>
-                  {dateObject.date}
-                </div>
+                <div>{dateObject.date}</div>
               </button>
             ))}
           </div>
