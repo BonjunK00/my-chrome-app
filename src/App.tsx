@@ -1,6 +1,9 @@
-import React from 'react'
 import './App.css'
 import { Calendar } from './components/Calendar'
+import { DBConfig } from './DBConfig'
+import { initDB } from 'react-indexed-db-hook'
+
+initDB(DBConfig)
 
 function App() {
   return (
