@@ -59,10 +59,6 @@ export const Calendar = () => {
     setSelectedDate({ year: selectedDate.year, month: selectedDate.month + 1, date: 1 })
   }
 
-  const handleClickDate = (dateObject: DateObject) => () => {
-    setSelectedDate(dateObject)
-  }
-
   useEffect(() => {
     updateWeekRows(selectedDate.year, selectedDate.month)
   }, [selectedDate])
@@ -92,7 +88,8 @@ export const Calendar = () => {
                 key={`${rowIndex}_${columnIndex}`}
                 dateObject={dateObject}
                 isSelected={isEqualsDate(selectedDate, dateObject)}
-                onClickDate={handleClickDate}
+                isOtherMonth={dateObject.month !== selectedDate.month}
+                onClickDate={setSelectedDate}
               />
             ))}
           </div>

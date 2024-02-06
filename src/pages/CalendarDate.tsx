@@ -1,26 +1,31 @@
 import { Modal } from '../components/Modal'
 import { useModal } from '../hooks/useModal'
+import { cn } from '../utils/cn'
 import { DateObject, getEnglishWeekday } from '../utils/date'
 
 type Props = {
   dateObject: DateObject
   isSelected?: boolean
+  isOtherMonth?: boolean
   onClickDate: (dateObject: DateObject) => void
 }
 
-export const CalendarDate = ({ dateObject, isSelected = false, onClickDate }: Props) => {
+export const CalendarDate = ({ dateObject, isSelected = false, isOtherMonth = false, onClickDate }: Props) => {
   const { isOpen, openModal, closeModal } = useModal()
 
-  const handleClickDate = (dateObject: DateObject) => () => {
+  const handleClickDate = () => {
     onClickDate(dateObject)
     openModal()
   }
   return (
     <>
       <button
-        className="flex flex-1 hover:bg-[#E3E9F6] justify-center text-[16px] p-[1px] text-[#262C37] font-medium"
+        className={cn(
+          'flex flex-1 hover:bg-[#E3E9F6] justify-center text-[16px] p-[1px] font-medium',
+          isOtherMonth ? 'text-[#B4B4B4]' : 'text-black',
+        )}
         aria-selected={isSelected}
-        onClick={handleClickDate(dateObject)}
+        onClick={handleClickDate}
       >
         <div>{dateObject.date}</div>
       </button>
