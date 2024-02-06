@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CalendarDate } from './CalendarDate'
 import { DateObject, getEnglishMonth, isEqualsDate, weekdays } from '../utils/date'
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa'
 
 export const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState<DateObject>({
@@ -67,12 +68,16 @@ export const Calendar = () => {
     <>
       <div className="flex flex-col h-full">
         <div className="flex items-center px-[10px] justify-between bg-[#8195B9] text-white p-[5px]">
-          <button className="text-[40px]" onClick={handleClickPrev}>{`<`}</button>
+          <button className="text-[40px]" onClick={handleClickPrev}>
+            <FaAngleLeft />
+          </button>
           <div className="flex flex-col items-center">
             <div className="text-[30px]">{getEnglishMonth(selectedDate.month)}</div>
             <div className="text-[18px]">{selectedDate.year}</div>
           </div>
-          <button className="text-[40px]" onClick={handleClickNext}>{`>`}</button>
+          <button className="text-[40px]" onClick={handleClickNext}>
+            <FaAngleRight />
+          </button>
         </div>
         <div className="flex bg-[#9AB5E7] text-white py-[10px] text-[18px]">
           {weekdays.map((day) => (
