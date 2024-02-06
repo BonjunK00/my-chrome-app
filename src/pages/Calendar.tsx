@@ -1,14 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Modal } from './Modal'
-import { useModal } from '../hooks/useModal'
-
-const week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-
-type DateObject = {
-  year: number
-  month: number
-  date: number
-}
+import { CalendarDate } from './CalendarDate'
+import { DateObject, getEnglishMonth, isEqualsDate, weekdays } from '../utils/date'
 
 export const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState<DateObject>({
@@ -18,44 +10,7 @@ export const Calendar = () => {
   })
   const [weekRows, setWeekRows] = useState<DateObject[][]>([])
 
-  const { isOpen, openModal, closeModal } = useModal()
-
-  const isEqualsDate = (dateObject1: DateObject, dateObject2: DateObject) => {
-    return (
-      dateObject1.year === dateObject2.year &&
-      dateObject1.month === dateObject2.month &&
-      dateObject1.date === dateObject2.date
-    )
-  }
-
-  const getEnglishMonth = (month: number) => {
-    return new Date(selectedDate.year, month - 1, 1).toLocaleString('en-US', { month: 'long' })
-  }
-
-  const handleClickPrev = () => {
-    if (selectedDate.month === 1) {
-      setSelectedDate({ year: selectedDate.year - 1, month: 12, date: 1 })
-      return
-    }
-    setSelectedDate({ year: selectedDate.year, month: selectedDate.month - 1, date: 1 })
-  }
-
-  const handleClickNext = () => {
-    if (selectedDate.month === 12) {
-      setSelectedDate({ year: selectedDate.year + 1, month: 1, date: 1 })
-      return
-    }
-    setSelectedDate({ year: selectedDate.year, month: selectedDate.month + 1, date: 1 })
-  }
-
-  const handleClickDate = (dateObject: DateObject) => () => {
-    setSelectedDate(dateObject)
-    openModal()
-  }
-
-  useEffect(() => {
-    const { year, month } = selectedDate
-
+  const updateWeekRows = (year: number, month: number) => {
     const firstDay = new Date(year, month - 1, 1).getDay()
     const lastDay = new Date(year, month, 0).getDay()
     const lastDate = new Date(year, month, 0).getDate()
@@ -86,7 +41,36 @@ export const Calendar = () => {
       rows.push(row)
     }
     setWeekRows(rows)
-  }, [selectedDate])
+  }
+
+  const handleClickPrev = () => {
+    if (selectedDate.month === 1) {
+      setSelectedDate({ year: selectedDate.year - 1, month: 12, date: 1 })
+      updateWeekRows(selectedDate.year - 1, 12)
+      return
+    }
+    setSelectedDate({ year: selectedDate.year, month: selectedDate.month - 1, date: 1 })
+    updateWeekRows(selectedDate.year, selectedDate.month - 1)
+  }
+
+  const handleClickNext = () => {
+    if (selectedDate.month === 12) {
+      setSelectedDate({ year: selectedDate.year + 1, month: 1, date: 1 })
+      updateWeekRows(selectedDate.year + 1, 1)
+      return
+    }
+    setSelectedDate({ year: selectedDate.year, month: selectedDate.month + 1, date: 1 })
+    updateWeekRows(selectedDate.year, selectedDate.month + 1)
+  }
+
+  const handleClickDate = (dateObject: DateObject) => () => {
+    setSelectedDate(dateObject)
+    updateWeekRows(dateObject.year, dateObject.month)
+  }
+
+  useEffect(() => {
+    updateWeekRows(selectedDate.year, selectedDate.month)
+  }, [])
 
   return (
     <>
@@ -100,7 +84,7 @@ export const Calendar = () => {
           <button className="text-[40px]" onClick={handleClickNext}>{`>`}</button>
         </div>
         <div className="flex bg-[#9AB5E7] text-white py-[10px] text-[18px]">
-          {week.map((day) => (
+          {weekdays.map((day) => (
             <div key={day} className="flex-1 text-center">
               {day}
             </div>
@@ -109,20 +93,16 @@ export const Calendar = () => {
         {weekRows.map((weekRow, rowIndex) => (
           <div key={rowIndex} className={`flex flex-1 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-[#EDF3FF]'}`}>
             {weekRow.map((dateObject, columnIndex) => (
-              <button
+              <CalendarDate
                 key={`${rowIndex}_${columnIndex}`}
-                className="flex flex-1 hover:bg-[#E3E9F6] justify-center text-[16px] p-[1px] text-[#262C37] font-medium"
-                onClick={handleClickDate(dateObject)}
-              >
-                <div>{dateObject.date}</div>
-              </button>
+                dateObject={dateObject}
+                isSelected={isEqualsDate(selectedDate, dateObject)}
+                onClickDate={handleClickDate}
+              />
             ))}
           </div>
         ))}
       </div>
-      <Modal isOpen={isOpen} onClose={closeModal}>
-        <div>안녕하세요</div>
-      </Modal>
     </>
   )
 }
