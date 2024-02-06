@@ -30,8 +30,9 @@ export const Modal = ({ isOpen, children, classNames, closeOnOutsideClick = true
               'absolute z-50 transform -translate-x-1/2 -translate-y-1/2 bg-white top-1/2 left-1/2 rounded-[10px] shadow-md',
               classNames?.modal,
             )}
+            onClick={(e) => e.stopPropagation()}
           >
-            <div>{children}</div>
+            {children}
           </div>
         </div>
       )}

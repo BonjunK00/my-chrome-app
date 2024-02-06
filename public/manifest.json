@@ -1,13 +1,10 @@
 {
   "manifest_version": 3,
   "version": "1.0.0",
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Schedule Calendar",
+  "name": "Schedule Calendar",
+  "description": "Schedule Calendar extension",
   "action": {
     "default_popup": "index.html"
-  },
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  }
 }

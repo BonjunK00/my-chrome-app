@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { useModal } from '../hooks/useModal'
 import { cn } from '../utils/cn'
 import { DateObject } from '../utils/date'
+import { ScheduleObject } from '../utils/schedule'
 import { ScheduleModal } from './ScheduleModal'
 
 type Props = {
@@ -11,6 +13,8 @@ type Props = {
 }
 
 export const CalendarDate = ({ dateObject, isSelected = false, isOtherMonth = false, onClickDate }: Props) => {
+  const [schedules, setSchedules] = useState<ScheduleObject[]>([])
+
   const { isOpen, openModal, closeModal } = useModal()
 
   const handleClickDate = () => {
@@ -29,7 +33,13 @@ export const CalendarDate = ({ dateObject, isSelected = false, isOtherMonth = fa
       >
         <div>{dateObject.date}</div>
       </button>
-      <ScheduleModal dateObject={dateObject} isOpen={isOpen} onCloseModal={closeModal} />
+      <ScheduleModal
+        schedules={schedules}
+        dateObject={dateObject}
+        isOpen={isOpen}
+        onChangeSchedules={setSchedules}
+        onCloseModal={closeModal}
+      />
     </>
   )
 }
