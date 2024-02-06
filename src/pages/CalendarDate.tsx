@@ -23,23 +23,25 @@ export const CalendarDate = ({ dateObject, isSelected = false, isOtherMonth = fa
   }
   return (
     <>
-      <button
+      <div
         className={cn(
-          'flex flex-1 hover:bg-[#E3E9F6] justify-center text-[16px] p-[1px] font-medium',
+          'flex flex-1 hover:bg-[#E3E9F6] justify-center text-[16px] p-[1px] font-medium cursor-pointer',
           isOtherMonth ? 'text-[#C5CAD3]' : 'text-black',
         )}
         aria-selected={isSelected}
         onClick={handleClickDate}
       >
         <div>{dateObject.date}</div>
-      </button>
-      <ScheduleModal
-        schedules={schedules}
-        dateObject={dateObject}
-        isOpen={isOpen}
-        onChangeSchedules={setSchedules}
-        onCloseModal={closeModal}
-      />
+      </div>
+      {isOpen && (
+        <ScheduleModal
+          schedules={schedules}
+          dateObject={dateObject}
+          isOpen={isOpen}
+          onChangeSchedules={setSchedules}
+          onCloseModal={closeModal}
+        />
+      )}
     </>
   )
 }
