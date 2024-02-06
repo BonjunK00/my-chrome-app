@@ -9,7 +9,8 @@ type Props = {
 }
 
 export const Schedule = ({ schedule, isSelected, onClickSchedule }: Props) => {
-  const handleClickSchedule = () => {
+  const handleClickSchedule = (e: React.MouseEvent) => {
+    e.stopPropagation()
     onClickSchedule(schedule)
   }
 

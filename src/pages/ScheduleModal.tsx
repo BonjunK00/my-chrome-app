@@ -16,12 +16,43 @@ type Props = {
 }
 
 export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules, onCloseModal }: Props) => {
+  const sortedSchedules = [...schedules].sort((a, b) => a.order - b.order)
+
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | undefined>(undefined)
+
+  const handleClickDelete = () => {
+    if (selectedScheduleId === undefined) return
+    const newSchedules = schedules.filter((schedule) => schedule.id !== selectedScheduleId)
+    onChangeSchedules(newSchedules)
+    setSelectedScheduleId(undefined)
+  }
+
+  const handleClickUp = () => {
+    if (selectedScheduleId === undefined) return
+    const index = sortedSchedules.findIndex((schedule) => schedule.id === selectedScheduleId)
+    if (index === 0) return
+    const newSchedules = [...schedules]
+    const temp = newSchedules[index].order
+    newSchedules[index].order = newSchedules[index - 1].order
+    newSchedules[index - 1].order = temp
+    onChangeSchedules(newSchedules)
+  }
+
+  const handleClickDown = () => {
+    if (selectedScheduleId === undefined) return
+    const index = sortedSchedules.findIndex((schedule) => schedule.id === selectedScheduleId)
+    if (index === schedules.length - 1) return
+    const newSchedules = [...schedules]
+    const temp = newSchedules[index].order
+    newSchedules[index].order = newSchedules[index + 1].order
+    newSchedules[index + 1].order = temp
+    onChangeSchedules(newSchedules)
+  }
 
   const handleClickAddSchedule = () => {
     const newSchedule: ScheduleObject = {
       id: Date.now(),
-      schedule: 'New Schedule',
+      schedule: 'New asdf',
       date: new Date(dateObject.year, dateObject.month, dateObject.date, 9, 0, 0),
       category: DEFAULT_CATEGORY,
       order: schedules.length,
@@ -39,29 +70,31 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
     onCloseModal()
   }
 
-  const sortedSchedules = [...schedules].sort((a, b) => a.order - b.order)
+  const handleClickEmpty = () => {
+    setSelectedScheduleId(undefined)
+  }
 
   return (
-    <Modal classNames={{ modal: 'w-[360px] h-[400px]' }} isOpen={isOpen} onClose={handleCloseModal}>
-      <div className="flex flex-col">
+    <Modal isOpen={isOpen} onClose={handleCloseModal}>
+      <div className="flex flex-col w-[360px] h-[400px]" onClick={handleClickEmpty}>
         <div className="flex items-center justify-between py-[10px] px-[15px]">
           <div className="flex items-end space-x-[8px]">
             <div className="text-[26px] font-bold">{dateObject.date}</div>
             <div className="text-[20px] font-medium pb-[3px]">{getEnglishWeekday(dateObject)}</div>
           </div>
-          <div className="flex space-x-[5px]">
-            {false && (
+          <div className="flex space-x-[5px]" onClick={(e) => e.stopPropagation()}>
+            {selectedScheduleId !== undefined && (
               <>
                 <button className="bg-[#E6ECF6] rounded-[3px] p-[3px] hover:bg-[#D9E0EE]">
                   <FiEdit3 size={24} />
                 </button>
-                <button className="bg-[#E6ECF6] rounded-[3px] p-[3px] hover:bg-[#D9E0EE]">
+                <button className="bg-[#E6ECF6] rounded-[3px] p-[3px] hover:bg-[#D9E0EE]" onClick={handleClickDelete}>
                   <FiTrash2 size={24} />
                 </button>
-                <button className="bg-[#E6ECF6] rounded-[3px] p-[3px] hover:bg-[#D9E0EE]">
+                <button className="bg-[#E6ECF6] rounded-[3px] p-[3px] hover:bg-[#D9E0EE]" onClick={handleClickUp}>
                   <FiChevronUp size={24} />
                 </button>
-                <button className="bg-[#E6ECF6] rounded-[3px] p-[3px] hover:bg-[#D9E0EE]">
+                <button className="bg-[#E6ECF6] rounded-[3px] p-[3px] hover:bg-[#D9E0EE]" onClick={handleClickDown}>
                   <FiChevronDown size={24} />
                 </button>
               </>
