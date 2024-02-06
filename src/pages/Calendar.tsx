@@ -46,31 +46,26 @@ export const Calendar = () => {
   const handleClickPrev = () => {
     if (selectedDate.month === 1) {
       setSelectedDate({ year: selectedDate.year - 1, month: 12, date: 1 })
-      updateWeekRows(selectedDate.year - 1, 12)
       return
     }
     setSelectedDate({ year: selectedDate.year, month: selectedDate.month - 1, date: 1 })
-    updateWeekRows(selectedDate.year, selectedDate.month - 1)
   }
 
   const handleClickNext = () => {
     if (selectedDate.month === 12) {
       setSelectedDate({ year: selectedDate.year + 1, month: 1, date: 1 })
-      updateWeekRows(selectedDate.year + 1, 1)
       return
     }
     setSelectedDate({ year: selectedDate.year, month: selectedDate.month + 1, date: 1 })
-    updateWeekRows(selectedDate.year, selectedDate.month + 1)
   }
 
   const handleClickDate = (dateObject: DateObject) => () => {
     setSelectedDate(dateObject)
-    updateWeekRows(dateObject.year, dateObject.month)
   }
 
   useEffect(() => {
     updateWeekRows(selectedDate.year, selectedDate.month)
-  }, [])
+  }, [selectedDate])
 
   return (
     <>

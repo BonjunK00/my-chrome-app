@@ -3,10 +3,15 @@ type Props = {
   isOpen?: boolean
   children?: React.ReactNode
   closeOnOutsideClick?: boolean
+  classNames?: {
+    backdrop?: string
+    modal?: string
+    title?: string
+  }
   onClose?: () => void
 }
 
-export const Modal = ({ title = '', isOpen, children, closeOnOutsideClick = true, onClose }: Props) => {
+export const Modal = ({ title = '', isOpen, children, classNames, closeOnOutsideClick = true, onClose }: Props) => {
   const handleClickOutside = () => {
     if (closeOnOutsideClick) {
       onClose?.()
