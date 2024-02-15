@@ -16,8 +16,6 @@ type Props = {
 }
 
 export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules, onCloseModal }: Props) => {
-  const sortedSchedules = [...schedules].sort((a, b) => a.order - b.order)
-
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | undefined>(undefined)
 
   const handleClickDelete = () => {
@@ -29,7 +27,7 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
 
   const handleClickUp = () => {
     if (selectedScheduleId === undefined) return
-    const index = sortedSchedules.findIndex((schedule) => schedule.id === selectedScheduleId)
+    const index = schedules.findIndex((schedule) => schedule.id === selectedScheduleId)
     if (index === 0) return
     const newSchedules = [...schedules]
     const temp = newSchedules[index].order
@@ -40,7 +38,7 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
 
   const handleClickDown = () => {
     if (selectedScheduleId === undefined) return
-    const index = sortedSchedules.findIndex((schedule) => schedule.id === selectedScheduleId)
+    const index = schedules.findIndex((schedule) => schedule.id === selectedScheduleId)
     if (index === schedules.length - 1) return
     const newSchedules = [...schedules]
     const temp = newSchedules[index].order
@@ -50,12 +48,20 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
   }
 
   const handleClickAddSchedule = () => {
+    const maxOrder =
+      schedules.length > 0
+        ? schedules.reduce((a, b) => {
+            if (a.order > b.order) return a
+            return b
+          }).order
+        : 0
+
     const newSchedule: ScheduleObject = {
       id: Date.now(),
       schedule: 'New asdf',
       date: new Date(dateObject.year, dateObject.month, dateObject.date, 9, 0, 0),
       category: DEFAULT_CATEGORY,
-      order: schedules.length,
+      order: maxOrder + 1,
       completed: false,
     }
     onChangeSchedules([...schedules, newSchedule])
@@ -110,7 +116,7 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
         </div>
         <Divider />
         <div className="flex flex-col space-y-[10px] p-[15px]">
-          {sortedSchedules.map((schedule) => (
+          {schedules.map((schedule) => (
             <Schedule
               key={schedule.id}
               schedule={schedule}

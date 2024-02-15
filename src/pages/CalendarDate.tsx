@@ -21,6 +21,8 @@ export const CalendarDate = ({ dateObject, isSelected = false, isOtherMonth = fa
     onClickDate(dateObject)
     openModal()
   }
+
+  const sortedSchedules = [...schedules].sort((a, b) => a.order - b.order)
   return (
     <>
       <div
@@ -35,7 +37,7 @@ export const CalendarDate = ({ dateObject, isSelected = false, isOtherMonth = fa
       </div>
       {isOpen && (
         <ScheduleModal
-          schedules={schedules}
+          schedules={sortedSchedules}
           dateObject={dateObject}
           isOpen={isOpen}
           onChangeSchedules={setSchedules}

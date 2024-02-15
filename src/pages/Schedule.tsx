@@ -5,10 +5,11 @@ import { IoIosCheckboxOutline } from 'react-icons/io'
 type Props = {
   schedule: ScheduleObject
   isSelected?: boolean
+  onChangeSchedule?: (schedule: ScheduleObject) => void
   onClickSchedule: (schedule: ScheduleObject) => void
 }
 
-export const Schedule = ({ schedule, isSelected, onClickSchedule }: Props) => {
+export const Schedule = ({ schedule, isSelected, onChangeSchedule, onClickSchedule }: Props) => {
   const handleClickSchedule = (e: React.MouseEvent) => {
     e.stopPropagation()
     onClickSchedule(schedule)
