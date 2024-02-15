@@ -58,7 +58,7 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
 
     const newSchedule: ScheduleObject = {
       id: Date.now(),
-      schedule: 'New asdf',
+      schedule: 'New Schedule',
       date: new Date(dateObject.year, dateObject.month, dateObject.date, 9, 0, 0),
       category: DEFAULT_CATEGORY,
       order: maxOrder + 1,
@@ -80,6 +80,14 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
     setSelectedScheduleId(undefined)
   }
 
+  const handleChangeSchedule = (changedSchedule: ScheduleObject) => {
+    const changedSchedules = schedules.map((schedule) => {
+      if (schedule.id === changedSchedule.id) return changedSchedule
+      return schedule
+    })
+    onChangeSchedules(changedSchedules)
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={handleCloseModal}>
       <div className="flex flex-col w-[360px] h-[400px]" onClick={handleClickEmpty}>
@@ -91,9 +99,6 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
           <div className="flex space-x-[5px]" onClick={(e) => e.stopPropagation()}>
             {selectedScheduleId !== undefined && (
               <>
-                <button className="bg-[#E6ECF6] rounded-[3px] p-[3px] hover:bg-[#D9E0EE]">
-                  <FiEdit3 size={24} />
-                </button>
                 <button className="bg-[#E6ECF6] rounded-[3px] p-[3px] hover:bg-[#D9E0EE]" onClick={handleClickDelete}>
                   <FiTrash2 size={24} />
                 </button>
@@ -122,6 +127,7 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
               schedule={schedule}
               isSelected={selectedScheduleId === schedule.id}
               onClickSchedule={handleChangeSelectedScheduleId}
+              onChangeSchedule={handleChangeSchedule}
             />
           ))}
         </div>

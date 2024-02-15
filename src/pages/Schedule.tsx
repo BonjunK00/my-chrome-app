@@ -1,6 +1,6 @@
 import { getTimeString } from '../utils/date'
 import { ScheduleObject } from '../utils/schedule'
-import { IoIosCheckboxOutline } from 'react-icons/io'
+import { IoIosCheckboxOutline, IoIosCheckbox } from 'react-icons/io'
 
 type Props = {
   schedule: ScheduleObject
@@ -15,6 +15,14 @@ export const Schedule = ({ schedule, isSelected, onChangeSchedule, onClickSchedu
     onClickSchedule(schedule)
   }
 
+  const handleChangeScheduleContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeSchedule?.({ ...schedule, schedule: e.target.value })
+  }
+
+  const handleClickCompleted = () => {
+    onChangeSchedule?.({ ...schedule, completed: !schedule.completed })
+  }
+
   return (
     <div className="flex space-x-[8px] items-center">
       <div
@@ -24,13 +32,17 @@ export const Schedule = ({ schedule, isSelected, onChangeSchedule, onClickSchedu
       >
         <div className="flex space-x-[8px] items-center">
           <div className="bg-blue-300 w-[15px] h-[36px] rounded-[5px]" />
-          <div className="">{schedule.schedule}</div>
+          {isSelected ? (
+            <input className="w-[200px]" value={schedule.schedule} onChange={handleChangeScheduleContent} />
+          ) : (
+            <div className="w-[200px]">{schedule.schedule}</div>
+          )}
         </div>
-        <div className="">{getTimeString(schedule.date)}</div>
+        <div>{getTimeString(schedule.date)}</div>
       </div>
 
-      <button>
-        <IoIosCheckboxOutline size={30} />
+      <button onClick={handleClickCompleted}>
+        {schedule.completed ? <IoIosCheckbox size={30} /> : <IoIosCheckboxOutline size={30} />}
       </button>
     </div>
   )
