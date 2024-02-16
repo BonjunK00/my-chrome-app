@@ -87,8 +87,11 @@ export const Calendar = () => {
           ))}
         </div>
         {weekRows.map((weekRow, rowIndex) => (
-          <div key={rowIndex} className={`flex flex-1 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-[#EDF3FF]'}`}>
-            {weekRow.map((dateObject, columnIndex) => (
+          <div
+            key={rowIndex}
+            className={`flex flex-1 overflow-hidden ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-[#EDF3FF]'}`}
+          >
+            {weekRow.map((dateObject) => (
               <CalendarDate
                 key={`${dateObject.year}_${dateObject.month}_${dateObject.date}`}
                 dateObject={dateObject}
