@@ -90,7 +90,7 @@ export const Calendar = () => {
           <div key={rowIndex} className={`flex flex-1 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-[#EDF3FF]'}`}>
             {weekRow.map((dateObject, columnIndex) => (
               <CalendarDate
-                key={`${rowIndex}_${columnIndex}`}
+                key={`${dateObject.year}_${dateObject.month}_${dateObject.date}`}
                 dateObject={dateObject}
                 isSelected={isEqualsDate(selectedDate, dateObject)}
                 isOtherMonth={dateObject.month !== selectedDate.month}
