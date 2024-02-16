@@ -120,7 +120,7 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
           </div>
         </div>
         <Divider />
-        <div className="flex flex-col space-y-[5px] p-[15px]">
+        <div className="flex flex-col space-y-[5px] p-[15px] overflow-auto scrollbar-hide">
           {schedules.map((schedule) => (
             <Schedule
               key={schedule.id}
