@@ -36,8 +36,8 @@ export const CalendarDate = ({ dateObject, isSelected = false, isOtherMonth = fa
         <div className="flex justify-center w-full">{dateObject.date}</div>
         {sortedSchedules.map((schedule) => {
           return (
-            <div className="flex space-x-[2px] p-[2px] overflow-x-hidden w-full">
-              <div className="bg-blue-300 w-[6px] h-[18px] rounded-[3px]" />
+            <div className="flex items-center space-x-[1px] p-[2px] overflow-x-hidden w-full">
+              <div className="bg-blue-300 min-w-[5px] w-[5px] h-[15px] rounded-[2px]" />
               <div
                 className={cn(
                   'text-[12px] whitespace-nowrap overflow-hidden text-ellipsis',

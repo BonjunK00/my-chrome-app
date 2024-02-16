@@ -33,12 +33,12 @@ export const Schedule = ({ schedule, isSelected, onChangeSchedule, onClickSchedu
         <div className="flex space-x-[8px] items-center">
           <div className="bg-blue-300 w-[15px] h-[36px] rounded-[5px]" />
           {isSelected ? (
-            <input className="w-[200px]" value={schedule.schedule} onChange={handleChangeScheduleContent} />
+            <input className="w-[250px]" value={schedule.schedule} onChange={handleChangeScheduleContent} />
           ) : (
-            <div className="w-[200px]">{schedule.schedule}</div>
+            <div className="w-[250px] whitespace-nowrap overflow-hidden text-ellipsis">{schedule.schedule}</div>
           )}
         </div>
-        <div>{getTimeString(schedule.date)}</div>
+        {/* <div>{getTimeString(schedule.date)}</div> */}
       </div>
 
       <button onClick={handleClickCompleted}>
