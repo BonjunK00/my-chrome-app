@@ -38,7 +38,14 @@ export const CalendarDate = ({ dateObject, isSelected = false, isOtherMonth = fa
           return (
             <div className="flex space-x-[2px] p-[2px] overflow-x-hidden w-full">
               <div className="bg-blue-300 w-[6px] h-[18px] rounded-[3px]" />
-              <div className="text-[12px] whitespace-nowrap overflow-hidden text-ellipsis">{schedule.schedule}</div>
+              <div
+                className={cn(
+                  'text-[12px] whitespace-nowrap overflow-hidden text-ellipsis',
+                  schedule.completed && 'line-through',
+                )}
+              >
+                {schedule.schedule}
+              </div>
             </div>
           )
         })}
