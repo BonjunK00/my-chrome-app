@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { CalendarDate } from './CalendarDate'
 import { DateObject, getEnglishMonth, isEqualsDate, weekdays } from '../utils/date'
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa'
+import { useIndexedDB } from 'react-indexed-db-hook'
 
 export const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState<DateObject>({
@@ -10,6 +11,8 @@ export const Calendar = () => {
     date: new Date().getDate(),
   })
   const [weekRows, setWeekRows] = useState<DateObject[][]>([])
+
+  const { getAll } = useIndexedDB('schedule')
 
   const updateWeekRows = (year: number, month: number) => {
     const firstDay = new Date(year, month - 1, 1).getDay()
@@ -63,6 +66,18 @@ export const Calendar = () => {
   useEffect(() => {
     updateWeekRows(selectedDate.year, selectedDate.month)
   }, [selectedDate])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getAll()
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchData()
+  }, [getAll])
 
   return (
     <>

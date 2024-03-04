@@ -6,6 +6,7 @@ import { ScheduleObject } from '../utils/schedule'
 import { Schedule } from './Schedule'
 import { DEFAULT_CATEGORY } from '../utils/category'
 import { useState } from 'react'
+import { useIndexedDB } from 'react-indexed-db-hook'
 
 type Props = {
   schedules: ScheduleObject[]
@@ -17,6 +18,7 @@ type Props = {
 
 export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules, onCloseModal }: Props) => {
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | undefined>(undefined)
+  const {add} = useIndexedDB('schedule')
 
   const handleClickDelete = () => {
     if (selectedScheduleId === undefined) return
@@ -47,7 +49,7 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
     onChangeSchedules(newSchedules)
   }
 
-  const handleClickAddSchedule = () => {
+  const handleClickAddSchedule = async () => {
     const maxOrder =
       schedules.length > 0
         ? schedules.reduce((a, b) => {
@@ -64,6 +66,7 @@ export const ScheduleModal = ({ schedules, dateObject, isOpen, onChangeSchedules
       order: maxOrder + 1,
       completed: false,
     }
+    await add(newSchedule)
     onChangeSchedules([...schedules, newSchedule])
   }
 
